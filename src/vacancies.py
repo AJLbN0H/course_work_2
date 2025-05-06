@@ -1,8 +1,12 @@
-from src.api import HeadHunterAPI
 
 class Vacancy:
 
-    __slots__ = ('name', 'salary', 'requirement', 'link_to_vacancy')
+    __slots__ = ('id', 'name', 'salary', 'requirement', 'url')
+
+    def __validate_id(self, id):
+        if not isinstance(id, int):
+            return 'ID отсутсвует'
+        return id
 
     def __validate_name(self, name):
         if not isinstance(name, str) or not name:
@@ -10,26 +14,27 @@ class Vacancy:
         return name
 
     def __validate_salary(self, salary):
-        if not isinstance(salary, int) or salary < 0:
+        if not isinstance(salary, int) or salary <= 0:
             return 0
         return salary
 
     def __validate_requirement(self, requirement):
         if not isinstance(requirement, str) or not requirement:
-            return 'Описание отсутсвует'
+            return 'Не указаны'
         return requirement
 
-    def __validate_link_to_vacancy(self, link_to_vacancy):
-        if not isinstance(link_to_vacancy, str) or not link_to_vacancy:
+    def __validate_url(self, url):
+        if not isinstance(url, str) or not url:
             return 'Ссылка на вакансию отсутствует'
-        return link_to_vacancy
+        return url
 
 
-    def __init__(self, name, salary, requirement, link_to_vacancy):
+    def __init__(self, id, name, salary, requirement, url):
+        self.id = self.__validate_id(id)
         self.name = self.__validate_name(name)
         self.salary = self.__validate_salary(salary)
         self. requirement = self.__validate_requirement(requirement)
-        self.link_to_vacancy = self.__validate_link_to_vacancy(link_to_vacancy)
+        self.url = self.__validate_url(url)
 
     def __lt__(self, other):
         return self < other
@@ -44,18 +49,13 @@ class Vacancy:
         return self >= other
 
     def __repr__(self):
-        return f"Vacancy(name='{self.name}', salary='{self.salary}', requirement='{self.requirement}', link_to_vacancy='{self.link_to_vacancy}')"
+        return f"Vacancy(ID='{self.id}, name='{self.name}', salary='{self.salary}', requirement='{self.requirement}', url='{self.url}')"
 
     def to_dict(self):
         return {
+            'id': self.id,
             'name': self.name,
             'salary': self.salary,
             'requirement': self.requirement,
-            'link_to_vacancy': self.link_to_vacancy
+            'url': self.url
         }
-
-if __name__ == '__main__':
-    imp1 = HeadHunterAPI()
-    #print(imp1.get_vacancies('Водитель'))
-    imp2 = Vacancy
-    str(imp2)
