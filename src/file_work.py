@@ -18,7 +18,11 @@ class FileWork(ABC):
         pass
 
     @abstractmethod
-    def delete_vacancy(self):
+    def file_cleaning(self):
+        pass
+
+    @abstractmethod
+    def delete_vacancy(self, vacancies_list):
         pass
 
 
@@ -53,7 +57,24 @@ class WorkingWithJSON(FileWork):
             with open(self._filename, 'w', encoding='utf-8'):
                 status = 'Файл создан'
 
-    def delete_vacancy(self):
+    def file_cleaning(self):
 
         with open(self._filename, 'w', encoding='utf-8') as f:
             del f
+
+    def delete_vacancy(self, vacancies_list):
+
+        data = self.get_data_from_file()
+
+        clean_data = []
+
+        with open(self._filename, 'w', encoding='utf-8') as f:
+
+            self.file_cleaning()
+
+            for vacancy in data:
+                if vacancy == vacancies_list:
+                    clean_data.append(vacancy)
+
+            if clean_data:
+                self.add_vacancy(clean_data)
