@@ -5,12 +5,12 @@ class Vacancy:
 
     def __validate_id(self, id):
         if not isinstance(id, int):
-            return 'ID отсутсвует'
+            return 'Отсутсвует'
         return id
 
     def __validate_name(self, name):
-        if not isinstance(name, str) or not name:
-            return 'Вакансия не имеет имени'
+        if not isinstance(name, str) or not name or name.split() == []:
+            return 'Отсутствует'
         return name
 
     def __validate_salary(self, salary):
@@ -19,7 +19,7 @@ class Vacancy:
         return salary
 
     def __validate_requirement(self, requirement):
-        if not isinstance(requirement, str) or not requirement:
+        if not isinstance(requirement, str) or not requirement or requirement.split() == []:
             return 'Не указаны'
         return requirement
 

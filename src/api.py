@@ -58,7 +58,7 @@ class HeadHunterAPI(API):
                 elif vacancy['salary'] and vacancy['salary']['from'] is None:
                     dict_vacancy.append(
                     {
-                        'id': (vacancy['id']),
+                        'id': int(vacancy['id']),
                         'name': vacancy['name'],
                         'salary': vacancy['salary']['to'],
                         'requirement': vacancy['snippet']['requirement'],
@@ -69,7 +69,7 @@ class HeadHunterAPI(API):
                 elif vacancy['salary'] and vacancy['salary']['to'] is None:
                     dict_vacancy.append(
                     {
-                        'id': vacancy['id'],
+                        'id': int(vacancy['id']),
                         'name': vacancy['name'],
                         'salary': vacancy['salary']['from'],
                         'requirement': vacancy['snippet']['requirement'],

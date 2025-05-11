@@ -1,6 +1,5 @@
 from abc import ABC, abstractmethod
 import json
-from fileinput import filename
 from json import JSONDecodeError
 
 
@@ -64,17 +63,16 @@ class WorkingWithJSON(FileWork):
 
     def delete_vacancy(self, vacancies_list):
 
-        data = self.get_data_from_file()
+        data_file = self.get_data_from_file()
 
-        clean_data = []
+        clean_data_file = []
+
+        for vacancy in data_file:
+
+            if vacancy not in vacancies_list:
+                clean_data_file.append(vacancy)
+
+        self.file_cleaning()
 
         with open(self._filename, 'w', encoding='utf-8') as f:
-
-            self.file_cleaning()
-
-            for vacancy in data:
-                if vacancy == vacancies_list:
-                    clean_data.append(vacancy)
-
-            if clean_data:
-                self.add_vacancy(clean_data)
+            json.dump(clean_data_file, f, ensure_ascii=False)
