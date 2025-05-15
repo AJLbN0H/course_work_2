@@ -2,7 +2,7 @@ from src.file_work import WorkingWithJSON
 
 
 def display_of_vacancies(list_vacancies: list) -> print:
-    """ Выводит вакансии в консоль """
+    """Выводит вакансии в консоль"""
 
     for vacancy in list_vacancies:
         if vacancy["requirement"] is None:
@@ -25,7 +25,7 @@ def display_of_vacancies(list_vacancies: list) -> print:
 
 
 def display_of_number_vacancies(len_list_vacancies: int, list_vacancies: list) -> print:
-    """ Выводит количество найденых вакансии в консоль """
+    """Выводит количество найденых вакансий в консоль"""
 
     str_number = str(len_list_vacancies)
 
@@ -33,42 +33,32 @@ def display_of_number_vacancies(len_list_vacancies: int, list_vacancies: list) -
         if len_list_vacancies == 1:
             print(f"\nНайдена {len(list_vacancies)} вакансия, соответствующая вашему запросу")
 
-        elif len_list_vacancies == 2 or len_list_vacancies == 3 or len_list_vacancies == 4:
+        elif 2 <= len_list_vacancies <= 4:
             print(f"\nНайдено {len(list_vacancies)} вакансии, соответствующие вашему запросу")
 
         else:
             print(f"\nНайдено {len(list_vacancies)} вакансий, соответствующих вашему запросу")
 
     elif len(str_number) == 2:
-        if (
-            len_list_vacancies == 11
-            or len_list_vacancies == 12
-            or len_list_vacancies == 13
-            or len_list_vacancies == 14
-            or len_list_vacancies == 15
-            or len_list_vacancies == 16
-            or len_list_vacancies == 17
-            or len_list_vacancies == 18
-            or len_list_vacancies == 19
-        ):
-            print(f"\nНайдено {len(list_vacancies)} вакансий, соответствующие вашему запросу")
+        if 11 <= len_list_vacancies <= 19:
+            print(f"\nНайдено {len(list_vacancies)} вакансий, соответствующих вашему запросу")
 
         else:
-            if str_number[1] == 1:
+            if int(str_number[1]) == 1:
                 print(f"\nНайдена {len(list_vacancies)} вакансия, соответствующая вашему запросу")
 
-            elif int(str_number[1]) == 2 or int(str_number[1]) == 3 or int(str_number[1]) == 4:
+            elif 2 <= int(str_number[1]) <= 4:
                 print(f"\nНайдено {len(list_vacancies)} вакансии, соответствующие вашему запросу")
 
             else:
                 print(f"\nНайдено {len(list_vacancies)} вакансий, соответствующих вашему запросу")
 
     else:
-        print(f"\nНайдено {len(list_vacancies)} вакансий, соответствующие вашему запросу")
+        print(f"\nНайдено {len(list_vacancies)} вакансий, соответствующих вашему запросу")
 
 
 def display_range_vacancies(top_n: int, list_vacancies: list) -> print:
-    """ Выводит вакансии в консоль по диапазону, который указал пользователем """
+    """Выводит вакансии в консоль по диапазону, который указал пользовать"""
 
     status = 0
     for vacancy in list_vacancies:
@@ -102,24 +92,24 @@ def display_range_vacancies(top_n: int, list_vacancies: list) -> print:
 
 
 def deleted_option(list_vacancies: list) -> print:
-    """ Метод взаимодействующий с пользователем по поводу удаления вакансий из файла 'vacancies.json' """
+    """Часть кода отвечающая за удаление вакансий из файла 'vacancies.json'"""
 
     status = 0
     if len(list_vacancies) == 1:
         while True:
             if status != 1:
-                deleted_option = input(
+                deleted_option_ = input(
                     "\nВыберете номер действия:" "\n1. Удалить эту вакансию" "\n2. Не удалять" "\nВыбран номер: "
                 )
 
-                if deleted_option == "1":
+                if deleted_option_ == "1":
                     WorkingWithJSON().delete_vacancy(list_vacancies)
                     print("\nВакансия удалена")
 
                     status = 1
                     break
 
-                elif deleted_option == "2":
+                elif deleted_option_ == "2":
 
                     status = 1
                     break
@@ -133,18 +123,18 @@ def deleted_option(list_vacancies: list) -> print:
     else:
         while True:
             if status != 1:
-                deleted_option = input(
+                deleted_option_ = input(
                     "\nВыберете номер действия:" "\n1. Удалить эти вакансии" "\n2. Не удалять" "\nВыбран номер: "
                 )
 
-                if deleted_option == "1":
+                if deleted_option_ == "1":
                     WorkingWithJSON().delete_vacancy(list_vacancies)
                     print("\nВакансии удалены")
 
                     status = 1
                     break
 
-                elif deleted_option == "2":
+                elif deleted_option_ == "2":
 
                     status = 1
                     break
@@ -157,7 +147,7 @@ def deleted_option(list_vacancies: list) -> print:
 
 
 def display_top_vacancies(list_vacancies: list) -> print:
-    """ Метод взаимодействующий с пользователем по поводу сортировки и вывода вакансий """
+    """Часть отвечающая за сортировку и вывод вакансий"""
 
     status = 0
     while True:
@@ -175,29 +165,36 @@ def display_top_vacancies(list_vacancies: list) -> print:
                     break
 
                 elif top_n > 1:
-                    user_selection_3 = input(
-                        "\nВыберете номер действия:"
-                        "\n1. Отсортировать по возрастанию"
-                        "\n2. Отсортировать по убыванию"
-                        "\nВыбрано действие: "
-                    )
+                    while True:
+                        if status != 1:
 
-                    if user_selection_3 == "1":
-                        sorted_range_vacancies = sorted(list_vacancies, key=lambda x: x["salary"], reverse=False)
-                        display_range_vacancies(top_n, sorted_range_vacancies)
+                            user_selection_3 = input(
+                                "\nВыберете номер действия:"
+                                "\n1. Отсортировать по возрастанию"
+                                "\n2. Отсортировать по убыванию"
+                                "\nВыбрано действие: "
+                            )
 
-                        status = 1
-                        break
+                            if user_selection_3 == "1":
+                                sorted_range_vacancies = sorted(
+                                    list_vacancies, key=lambda x: x["salary"], reverse=False
+                                )
+                                display_range_vacancies(top_n, sorted_range_vacancies)
 
-                    elif user_selection_3 == "2":
-                        sorted_range_vacancies = sorted(list_vacancies, key=lambda x: x["salary"], reverse=True)
-                        display_range_vacancies(top_n, sorted_range_vacancies)
+                                status = 1
+                                break
 
-                        status = 1
-                        break
+                            elif user_selection_3 == "2":
+                                sorted_range_vacancies = sorted(
+                                    list_vacancies, key=lambda x: x["salary"], reverse=True
+                                )
+                                display_range_vacancies(top_n, sorted_range_vacancies)
 
-                    else:
-                        print("\nВы ввели неверный номер действия!")
+                                status = 1
+                                break
+
+                            else:
+                                print("\nВы ввели неверный номер действия!")
 
                 else:
                     print("\nНельзя вывести топ 0")

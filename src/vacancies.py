@@ -1,28 +1,39 @@
 class Vacancy:
+    """Класс для работы с вакансиями"""
 
     __slots__ = ("id", "name", "salary", "requirement", "url")
 
-    def __validate_id(self, id):
+    def __validate_id(self, id: int) -> int or str:
+        """Метод валидации ID вакансии"""
+
         if not isinstance(id, int):
             return "Отсутсвует"
         return id
 
-    def __validate_name(self, name):
+    def __validate_name(self, name: str) -> str:
+        """Метод валидации имени вакансии"""
+
         if not isinstance(name, str) or not name or name.split() == []:
             return "Отсутствует"
         return name
 
-    def __validate_salary(self, salary):
+    def __validate_salary(self, salary: int) -> int:
+        """Метод валидации зарплаты"""
+
         if not isinstance(salary, int) or salary <= 0:
             return 0
         return salary
 
-    def __validate_requirement(self, requirement):
+    def __validate_requirement(self, requirement: str) -> str:
+        """Метод валидации требований вакансии"""
+
         if not isinstance(requirement, str) or not requirement or requirement.split() == []:
             return "Не указаны"
         return requirement
 
-    def __validate_url(self, url):
+    def __validate_url(self, url: str) -> str:
+        """Метод валидации ссылки на вакансию"""
+
         if not isinstance(url, str) or not url:
             return "Ссылка на вакансию отсутствует"
         return url
@@ -47,11 +58,13 @@ class Vacancy:
         return self >= other
 
     def __repr__(self):
-        return (f"Vacancy(ID='{self.id}, name='{self.name}', salary='{self.salary}', requirement='{self.requirement}',"
-                f" url='{self.url}')")
+        return (
+            f"Vacancy(ID='{self.id}, name='{self.name}', salary='{self.salary}', requirement='{self.requirement}',"
+            f" url='{self.url}')"
+        )
 
-    def to_dict(self):
-        """ Метод собирающий данные введеные пользователем в словарь """
+    def to_dict(self) -> dict:
+        """Метод собирающий данные введеные пользователем в словарь"""
 
         return {
             "id": self.id,

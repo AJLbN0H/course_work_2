@@ -4,16 +4,17 @@ from json import JSONDecodeError
 
 
 class FileWork(ABC):
+    """Абстрактный класс для работы с файлами"""
 
     def __init__(self, filename):
         self._filename = filename
 
     @abstractmethod
-    def add_vacancy(self, vacancy):
+    def add_vacancy(self, vacancy: dict) -> json.dump:
         pass
 
     @abstractmethod
-    def get_data_from_file(self):
+    def get_data_from_file(self) -> list:
         pass
 
     @abstractmethod
@@ -21,11 +22,12 @@ class FileWork(ABC):
         pass
 
     @abstractmethod
-    def delete_vacancy(self, vacancies_list):
+    def delete_vacancy(self, vacancies_list: list) -> json.dump:
         pass
 
 
 class WorkingWithJSON(FileWork):
+    """Класс отвечающий за взаимодействие с файлом 'vacancies.json'"""
 
     data = list
 
@@ -33,8 +35,8 @@ class WorkingWithJSON(FileWork):
         super().__init__(filename)
         self.data = []
 
-    def add_vacancy(self, vacancy):
-        """ Добавление вакансий в файл 'vacancies.json' """
+    def add_vacancy(self, vacancy) -> json.dump:
+        """Добавление вакансий в файл 'vacancies.json'"""
 
         self.get_data_from_file()
         self.data.append(vacancy)
@@ -42,8 +44,8 @@ class WorkingWithJSON(FileWork):
         with open(self._filename, "w", encoding="utf-8") as f:
             json.dump(self.data, f, ensure_ascii=False)
 
-    def get_data_from_file(self):
-        """ Получение вакансий из файла 'vacancies.json', если файла не существует то создает его """
+    def get_data_from_file(self) -> list:
+        """Получение вакансий из файла 'vacancies.json', если файла не существует то создает его"""
 
         try:
             with open(self._filename, "r", encoding="utf-8") as f:
@@ -58,13 +60,13 @@ class WorkingWithJSON(FileWork):
                 status = "Файл создан"
 
     def file_cleaning(self):
-        """ Очищает файл 'vacancies.json' """
+        """Очищает файл 'vacancies.json'"""
 
         with open(self._filename, "w", encoding="utf-8") as f:
             del f
 
-    def delete_vacancy(self, vacancies_list):
-        """ Удаляет вакансии выбраные пользователем из файла 'vacancies.json' """
+    def delete_vacancy(self, vacancies_list) -> json.dump:
+        """Удаляет вакансии выбраные пользователем из файла 'vacancies.json'"""
 
         data_file = self.get_data_from_file()
         clean_data_file = []

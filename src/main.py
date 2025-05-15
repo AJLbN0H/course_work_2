@@ -10,7 +10,7 @@ vacant = Vacancy
 
 
 def user_interaction():
-    """ Взаимодействие с пользователем """
+    """Взаимодействие с пользователем"""
 
     while True:
         action_number = input(
@@ -40,7 +40,7 @@ def user_interaction():
                             if status != 1:
                                 search_query = input("\nВведите поисковой запрос: ")
 
-                                if search_query.split() == []:
+                                if not search_query.split():
                                     print("\nВы не ввели поисковой запрос!")
 
                                 else:
@@ -53,56 +53,55 @@ def user_interaction():
                                             except ValueError:
                                                 print("\nВы неверно ввели количество вакансий!")
                                             else:
-                                                if top_vacancies >= 1:
-                                                    try:
-                                                        vacancies = api_vacancies.get_vacancies(
-                                                            search_query, top_vacancies
-                                                        )
-                                                    except AttributeError:
-                                                        print("\nБольше 100 вакансий получить нельзя")
+
+                                                if top_vacancies > 100:
+                                                    print("\nБольше 100 вакансий получить нельзя!")
+
+                                                elif 1 <= top_vacancies <= 100:
+                                                    vacancies = api_vacancies.get_vacancies(
+                                                        search_query, top_vacancies
+                                                    )
+                                                    if vacancies:
+                                                        display_of_number_vacancies(len(vacancies), vacancies)
+                                                        display_range_vacancies(top_vacancies, vacancies)
+
+                                                        while True:
+                                                            if status != 1:
+
+                                                                save_option = input(
+                                                                    "\nВыберете номер действия:"
+                                                                    "\n1. Записать в файл"
+                                                                    "\n2. Не записывать"
+                                                                    "\nВыбран номер: "
+                                                                )
+
+                                                                if save_option == "1":
+                                                                    for vacancy in vacancies:
+                                                                        file_work.add_vacancy(vacancy)
+
+                                                                    print(
+                                                                        "\nВакансии сохранены в файл "
+                                                                        "'vacancies.json'"
+                                                                    )
+
+                                                                    status = 1
+                                                                    break
+
+                                                                elif save_option == "2":
+
+                                                                    status = 1
+                                                                    break
+
+                                                                else:
+                                                                    print("\nВы ввели неверный номер действия!")
+
                                                     else:
-                                                        if vacancies:
-                                                            display_of_number_vacancies(len(vacancies), vacancies)
-                                                            display_range_vacancies(top_vacancies, vacancies)
+                                                        print(f"\nВакансии по запросу '{search_query}' не найдены")
 
-                                                            save_option = input(
-                                                                "\nВыберете номер действия:"
-                                                                "\n1. Записать в файл"
-                                                                "\n2. Не записывать"
-                                                                "\nВыбран номер: "
-                                                            )
-
-                                                            while True:
-                                                                if status != 1:
-                                                                    if save_option == "1":
-                                                                        for vacancy in vacancies:
-                                                                            file_work.add_vacancy(vacancy)
-
-                                                                        print(
-                                                                            "\nВакансии сохранены в файл "
-                                                                            "'vacancies.json'"
-                                                                        )
-
-                                                                        status = 1
-                                                                        break
-
-                                                                    elif save_option == "2":
-
-                                                                        status = 1
-                                                                        break
-
-                                                                    else:
-                                                                        print("\nВы ввели неверный номер действия!")
-
-                                                        else:
-                                                            print(f"\nВакансии по запросу '{search_query}' не найдены")
-
-                                                            status = 1
-                                                            break
-
+                                                        status = 1
+                                                        break
                                                 else:
-                                                    print("\nМеньше 1 вводить не нужно")
-
+                                                    print("\n0 вакансий получить нельзя!")
                                         else:
                                             break
                             else:
@@ -171,28 +170,90 @@ def user_interaction():
                                 if status != 1:
                                     user_search = input("\nВведите поисковой запрос: ")
 
-                                    if user_search.split() == []:
+                                    if not user_search.split():
                                         print("\nВы не ввели поисковой запрос!")
 
                                     else:
                                         id_vacancies = []
+
                                         for vacancy in data_vacancies:
+
                                             if "/" in vacancy["name"]:
                                                 for i in vacancy["name"].replace("/", " ").split():
-                                                    if user_search.lower() == i.lower():
-                                                        id_vacancies.append(vacancy)
+
+                                                    if "-" in i:
+                                                        for i_ in i.replace("-", " ").split():
+
+                                                            if "(" in i_ or ")" in i_:
+                                                                for i__ in i_.replace("(", " ").split():
+                                                                    for i___ in i__.replace(")", " ").split():
+                                                                        if user_search.lower() == i___.lower():
+                                                                            id_vacancies.append(vacancy)
+
+                                                            else:
+                                                                if user_search.lower() == i_.lower():
+                                                                    id_vacancies.append(vacancy)
+
+                                                    elif "(" in vacancy["name"] or ")" in i:
+                                                        for i_ in i.replace("(", " ").split():
+                                                            for i__ in i_.replace(")", " ").split():
+                                                                if user_search.lower() == i__.lower():
+                                                                    id_vacancies.append(vacancy)
+
+                                                    else:
+                                                        if user_search.lower() == i.lower():
+                                                            id_vacancies.append(vacancy)
 
                                             elif "-" in vacancy["name"]:
                                                 for i in vacancy["name"].replace("-", " ").split():
-                                                    if user_search.lower() == i.lower():
-                                                        id_vacancies.append(vacancy)
+
+                                                    if "/" in i:
+                                                        for i_ in i.replace("/", " ").split():
+
+                                                            if "(" in i_ or ")" in i_:
+                                                                for i__ in i_.replace("(", " ").split():
+                                                                    for i___ in i__.replace(")", " ").split():
+                                                                        if user_search.lower() == i___.lower():
+                                                                            id_vacancies.append(vacancy)
+
+                                                            else:
+                                                                if user_search.lower() == i_.lower():
+                                                                    id_vacancies.append(vacancy)
+
+                                                    elif "(" in vacancy["name"] or ")" in i:
+                                                        for i_ in i.replace("(", " ").split():
+                                                            for i__ in i_.replace(")", " ").split():
+                                                                if user_search.lower() == i__.lower():
+                                                                    id_vacancies.append(vacancy)
+
+                                                    else:
+                                                        if user_search.lower() == i.lower():
+                                                            id_vacancies.append(vacancy)
 
                                             elif "(" in vacancy["name"] or ")" in vacancy["name"]:
                                                 for i in vacancy["name"].replace("(", " ").split():
                                                     for i_ in i.replace(")", " ").split():
 
-                                                        if user_search.lower() == i_.lower():
-                                                            id_vacancies.append(vacancy)
+                                                        if "/" in i_:
+                                                            for i__ in i_.replace("/", " ").split():
+
+                                                                if "-" in i__:
+                                                                    for i___ in i__.replace("-", " ").split():
+                                                                        if user_search.lower() == i___.lower():
+                                                                            id_vacancies.append(vacancy)
+
+                                                                else:
+                                                                    if user_search.lower() == i__.lower():
+                                                                        id_vacancies.append(vacancy)
+
+                                                        elif "-" in i_:
+                                                            for i__ in i_.replace("-", " ").split():
+                                                                if user_search.lower() == i__.lower():
+                                                                    id_vacancies.append(vacancy)
+
+                                                        else:
+                                                            if user_search.lower() == i_.lower():
+                                                                id_vacancies.append(vacancy)
 
                                             else:
                                                 if user_search.lower() == vacancy["name"].lower():
@@ -232,16 +293,16 @@ def user_interaction():
             status = 0
             while True:
                 if status != 1:
-                    user_selection_1 = input(
-                        "\nВыберете номер действия:"
-                        "\n1. Получить топ N вакансий по зарплате из файла 'vacancies.json'"
-                        "\n2. Назад"
-                        "\nВыбран номер: "
-                    )
-
                     data_vacancies = file_work.get_data_from_file()
 
                     if data_vacancies:
+                        user_selection_1 = input(
+                            "\nВыберете номер действия:"
+                            "\n1. Получить топ N вакансий по зарплате из файла 'vacancies.json'"
+                            "\n2. Назад"
+                            "\nВыбран номер: "
+                        )
+
                         if user_selection_1 == "1":
                             while True:
                                 if status != 1:
@@ -261,27 +322,42 @@ def user_interaction():
                                                 for vacancy in data_vacancies:
                                                     salary.append(vacancy["salary"])
 
-                                                print(
-                                                    f"\nВведите диапазон зарплат"
-                                                    f"(От: '{min(salary)}' - До: '{max(salary)}'):"
-                                                )
-
                                                 try:
+                                                    print(
+                                                        f"\nВведите диапазон зарплат"
+                                                        f"(От: '{min(salary)}' - До: '{max(salary)}'):"
+                                                    )
                                                     from_ = int(input("От: "))
-                                                    to_ = int(input("До: "))
                                                 except ValueError:
                                                     print("\nВы неверно ввели диапазон зарплат!")
                                                 else:
-                                                    range_vacancies = []
-                                                    for vacancy in data_vacancies:
-                                                        if from_ <= vacancy["salary"] <= to_:
-                                                            range_vacancies.append(vacancy)
+                                                    while True:
+                                                        if status != 1:
+                                                            try:
+                                                                print(
+                                                                    f"\nВведите диапазон зарплат"
+                                                                    f"(От: '{min(salary)}' - До: '{max(salary)}'):"
+                                                                )
+                                                                to_ = int(input("До: "))
+                                                            except ValueError:
+                                                                print("\nВы неверно ввели диапазон зарплат!")
+                                                            else:
+                                                                range_vacancies = []
+                                                                for vacancy in data_vacancies:
+                                                                    if from_ <= vacancy["salary"] <= to_:
+                                                                        range_vacancies.append(vacancy)
 
-                                                    display_of_number_vacancies(len(range_vacancies), range_vacancies)
-                                                    display_top_vacancies(range_vacancies)
+                                                                display_of_number_vacancies(
+                                                                    len(range_vacancies), range_vacancies
+                                                                )
+                                                                if range_vacancies:
+                                                                    display_top_vacancies(range_vacancies)
+                                                                    status = 1
+                                                                    break
 
-                                                    status = 1
-                                                    break
+                                                                else:
+                                                                    status = 1
+                                                                    break
 
                                             else:
                                                 break
@@ -303,16 +379,13 @@ def user_interaction():
                                     break
 
                         elif user_selection_1 == "2":
-                            pass
-
-                        elif user_selection_1 == "3":
                             break
 
                         else:
                             print("\nВы ввели неверный номер действия!")
 
                     else:
-                        print("Файл 'vacancies.json' пуст")
+                        print("\nФайл 'vacancies.json' пуст")
                         break
 
                 else:
